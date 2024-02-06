@@ -20,7 +20,14 @@ const friends = [
 const server = http.createServer((req, res) => {
   const items = req.url.split('/');
 
-  if (items[1] === 'friends') {
+  if (req.method === 'POST' && items[1] === 'friends') {
+    console.log('Friends POST request');
+    req.on('data', (data) => {
+      const friend = JSON.parse(data.toString());
+      console.log('Request: ', friend);
+      friends.push(friend);
+    });
+  } else if (req.method === 'GET' && items[1] === 'friends') {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     if (items.length === 3) {
@@ -29,7 +36,7 @@ const server = http.createServer((req, res) => {
     } else {
       res.end(JSON.stringify(friends));
     }
-  } else if (items[1] === 'messages') {
+  } else if (req.method === 'GET' && items[1] === 'messages') {
     res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
     res.write('<body>');
@@ -49,3 +56,11 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}...`);
 });
+
+// Execute a POST request on the browser's console
+/* 
+fetch("http://localhost:3000/friends", {
+  method: "POST",
+  body: JSON.stringify({id:3,name:"Ryan Dahl"})
+});
+*/
