@@ -27,6 +27,7 @@ const server = http.createServer((req, res) => {
       console.log('Request: ', friend);
       friends.push(friend);
     });
+    req.pipe(res);
   } else if (req.method === 'GET' && items[1] === 'friends') {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
@@ -61,6 +62,16 @@ server.listen(PORT, () => {
 /* 
 fetch("http://localhost:3000/friends", {
   method: "POST",
-  body: JSON.stringify({id:3,name:"Ryan Dahl"})
+  body: JSON.stringify({id: 3, name: "Ryan Dahl"})
 });
 */
+
+// Execute a POST request on the browser's console and echo the function
+/* 
+fetch("http://localhost:3000/friends", {
+  method: "POST",
+  body: JSON.stringify({id: 3, name: "Grace Hopper"})
+})
+.then((response) => response.json())
+.then((friend) => console.log(friend));
+ */
